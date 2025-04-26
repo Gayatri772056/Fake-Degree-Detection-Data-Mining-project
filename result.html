@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="result-card">
+    <h2>Verification Results</h2>
+    <p><strong>Name:</strong> {{ record.name }}</p>
+    <p><strong>Degree:</strong> {{ record.degree }} in {{ record.field }}</p>
+    <p><strong>Institution:</strong> {{ record.institution }}</p>
+    <p><strong>Year:</strong> {{ record.year }}</p>
+    <p><strong>Percentage:</strong> {{ record.percentage }}</p>
+    
+    <h3>Findings:</h3>
+    {% for result in results %}
+      <div class="alert {% if '⚠️' in result %}alert-warning{% else %}alert-success{% endif %}">
+        {{ result }}
+      </div>
+    {% endfor %}
+    
+    <a href="{{ url_for('index') }}" class="btn" style="margin-top: 20px;">Check Another</a>
+  </div>
+{% endblock %}

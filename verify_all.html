@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="verify-all-container">
+        <h2>Batch Verification Results</h2>
+        <p class="summary">Showing {{ records|length }} records analyzed</p>
+        
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Degree</th>
+                        <th>Institution</th>
+                        <th>Year</th>
+                        <th>Percentage</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in records %}
+                    <tr class="{% if item.warnings[0] != '✅ No anomalies detected' %}table-warning{% else %}table-success{% endif %}">
+                        <td>{{ item.record.name }}</td>
+                        <td>{{ item.record.degree }}</td>
+                        <td>{{ item.record.institution }}</td>
+                        <td>{{ item.record.year }}</td>
+                        <td>{{ item.record.percentage }}</td>
+                        <td>
+                            {% if item.warnings[0] != '✅ No anomalies detected' %}
+                                <span class="badge badge-pill badge-danger">
+                                    ⚠️ {{ item.warnings|length }} issue(s)
+                                </span>
+                            {% else %}
+                                <span class="badge badge-pill badge-success">
+                                    ✅ Valid
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="summary-card">
+            <h4>Verification Summary</h4>
+            <div class="summary-stats">
+                <div class="stat-item valid">
+                    <span class="stat-count">{{ records|selectattr('warnings.0', 'equalto', '✅ No anomalies detected')|list|length }}</span>
+                    <span class="stat-label">Valid Records</span>
+                </div>
+                <div class="stat-item warning">
+                    <span class="stat-count">{{ records|rejectattr('warnings.0', 'equalto', '✅ No anomalies detected')|list|length }}</span>
+                    <span class="stat-label">Potential Issues</span>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
